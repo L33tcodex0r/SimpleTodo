@@ -28,6 +28,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lvItems = (ListView) findViewById(R.id.lvItems);
+
+        //Read items from file and populate the ListView with them
         readItems();
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
@@ -53,7 +55,6 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -66,6 +67,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setupListViewListener() {
+
+        //Delete items on long click
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
@@ -75,12 +78,14 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         });
+
+        //On item click, start an activity to its text.
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent editIntent = new Intent(MainActivity.this, EditItemActivity.class);
-                editIntent.putExtra("item", items.get(position));
-                editIntent.putExtra("position", position);
+                editIntent.putExtra("item", items.get(position)); //Pass in the item's name
+                editIntent.putExtra("position", position); //Pass in its position
                 startActivityForResult(editIntent, 0);
             }
         });
@@ -91,13 +96,13 @@ public class MainActivity extends ActionBarActivity {
         if (requestCode == 0 && resultCode == RESULT_OK) {
             String modifiedItem = data.getStringExtra("modifiedItem");
             int position = data.getIntExtra("position", 0);
-            items.set(position, modifiedItem);
+            items.set(position, modifiedItem); //Change the item in the list.
             itemsAdapter.notifyDataSetChanged();
-            writeItems();
+            writeItems(); //Write changes to file.
         }
     }
 
-    private void readItems() {
+    private void readItems() { //Read items from file.
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir, "todo.txt");
         try {
@@ -107,7 +112,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void writeItems() {
+    private void writeItems() { //Write to file.
         File filesDir = getFilesDir();
         System.out.println(filesDir.toString());
         File todoFile = new File(filesDir, "todo.txt");

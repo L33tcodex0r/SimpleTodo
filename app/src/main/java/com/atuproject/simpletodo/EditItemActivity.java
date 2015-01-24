@@ -22,7 +22,7 @@ public class EditItemActivity extends ActionBarActivity {
         String item = getIntent().getStringExtra("item");
         etEditItem.setText(item);
         etEditItem.requestFocus();
-        etEditItem.setSelection(item.length());
+        etEditItem.setSelection(item.length()); //Put the cursor at the end of the word.
     }
 
 
